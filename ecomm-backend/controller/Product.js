@@ -14,9 +14,18 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.fetchAllProducts = async (req, res) => {
+  
   //here we need all query string
-  let query = Product.find({deleted:{$ne:true}});
-  let totalProductsQuery = Product.find({deleted:{$ne:true}});
+  let condition = {}
+  if(!req.query.admin){
+      condition.deleted = {$ne:true}
+  }
+  
+  let query = Product.find(condition);
+  let totalProductsQuery = Product.find(condition);
+ 
+  // console.log("req.query:", req.query.admin);
+
 
   if (req.query.category) {
     query = query.find({ category: req.query.category });

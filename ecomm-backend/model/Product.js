@@ -13,7 +13,8 @@ brand:{type:String, required:true},
 category:{type:String, required:true},
 thumbnail:{type:String, required:true},
 images:{type:[String], required:true},
-deleted:{type:Boolean, default:false}
+deleted:{type:Boolean, default:false},
+admin:{type:Boolean, default:false}
 
 
 })
