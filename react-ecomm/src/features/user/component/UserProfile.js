@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUserInfo);
+  const userInfo = useSelector(selectUserInfo);
   const [selectedEditIndex,setSelectedEditIndex] =useState(-1);
   const [showAddressForm,setShowAddressForm] =useState(false);
   
@@ -23,7 +23,7 @@ const {
 
   const handleEditForm = (index)=>{
     setSelectedEditIndex(index);
-    const address =user.addresses[index];
+    const address =userInfo.addresses[index];
     setValue('name', address.name)
     setValue('email', address.email)
     setValue('phone', address.phone)
@@ -36,20 +36,20 @@ const {
 
 
   const handleEdit = (addressUpdate,index) => {
-    const newUser = { ...user, addresses: [...user.addresses] }; //for shallow copy
+    const newUser = { ...userInfo, addresses: [...userInfo.addresses] }; //for shallow copy
     newUser.addresses.splice(index, 1,addressUpdate);
     dispatch(updateUserAsync(newUser));
     setSelectedEditIndex(-1);
   };
 
   const handleRemove = (e, index) => {
-    const newUser = { ...user, addresses: [...user.addresses] }; //for shallow copy
+    const newUser = { ...userInfo, addresses: [...userInfo.addresses] }; //for shallow copy
     newUser.addresses.splice(index, 1);
     dispatch(updateUserAsync(newUser));
   };
 
   const handleAdd =(address)=>{
-    const newUser = { ...user, addresses: [...user.addresses, address] };
+    const newUser = { ...userInfo, addresses: [...userInfo.addresses, address] };
     dispatch(updateUserAsync(newUser));
     setShowAddressForm(false)
   }
@@ -58,13 +58,13 @@ const {
     <div>
       <div className="mt-16 bg-stone-200 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8    rounded-md ">
         <h1 className="text-5xl font-serif font-semibold tracking-tighter text-slate-800 pl-10 py-5">
-          Name: {user.name ? user.name : "New Guest"}
+          Name: {userInfo.name ? userInfo.name : "New Guest"}
         </h1>
         <h3 className="text-lg font-serif font-semibold tracking-tighter text-slate-800 pl-10 py-5">
-          Email address: {user.email}
+          Email address: {userInfo.email}
         </h3>
-        {user.role==='admin' && (<h3 className="text-lg font-serif font-semibold tracking-tighter text-slate-800 pl-10 py-5">
-          role: {user.role}
+        {userInfo.role==='admin' && (<h3 className="text-lg font-serif font-semibold tracking-tighter text-slate-800 pl-10 py-5">
+          role: {userInfo.role}
         </h3>)}
         </div>
      
@@ -274,8 +274,8 @@ const {
             </form>:null}
          
         <p className="mt-0.5 text-md  text-gray-600">Your Address:</p>
-        {user.addresses.map((address, index) => (
-          <div>
+        {userInfo.addresses.map((address, index) => (
+          <div key={index}>
            { selectedEditIndex === index ? <form
               noValidate
               const

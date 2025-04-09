@@ -25,7 +25,7 @@ export default function Cart() {
   
   const totalAmount = items.reduce(
     (amount, item) =>
-      discountedPrice(item) *
+      discountedPrice(item.product) *
         item.quantity +
       amount,
     0
@@ -33,7 +33,7 @@ export default function Cart() {
   const totalItems = items.reduce((total, item) => item.quantity + total, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({ ...item, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id:item.id, quantity: +e.target.value }));
   };
 
   const handleRemove = (e, id) => {
@@ -60,8 +60,8 @@ export default function Cart() {
                   <li key={item.id} className="flex py-6">
                     <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                       <img
-                        alt={item.title}
-                        src={item.thumbnail}
+                        alt={item.product.title}
+                        src={item.product.thumbnail}
                         className="size-full object-cover"
                       />
                     </div>
@@ -69,20 +69,20 @@ export default function Cart() {
                     <div className="ml-4 flex flex-1 flex-col">
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
-                          <h3>{item.title}</h3>
+                          <h3>{item.product.title}</h3>
                           <div>
                             {" "}
                             <p className="ml-4 font-bold">
                               ${" "}
-                              {discountedPrice(item) * item.quantity}
+                              {discountedPrice(item.product) * item.quantity}
                             </p>
                             <p className="ml-4 text-gray-400 line-through">
-                              $ {item.price.toFixed(2) * item.quantity}
+                              $ {item.product.price.toFixed(2) * item.quantity}
                             </p>
                           </div>
                         </div>
                         <p className="mt-1 text-sm text-gray-600">
-                          {item.brand}
+                          {item.product.brand}
                         </p>
                       </div>
                       <div className="flex flex-1 items-end justify-between text-sm">

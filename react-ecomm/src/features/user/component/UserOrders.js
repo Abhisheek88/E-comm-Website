@@ -7,19 +7,19 @@ import { discountedPrice } from "../../../app/constants";
 export default function UserOrders() {
   const dispatch = useDispatch();
 
-  const user = useSelector(selectUserInfo);
+  const userInfo = useSelector(selectUserInfo);
   const orders = useSelector(selectUserOrders);
 
   console.log("Orders Data:", orders);
 
   useEffect(() => {
-    dispatch(fetchLoggedInUserOrderAsync(user.id));
+    dispatch(fetchLoggedInUserOrderAsync(userInfo.id));
   }, []);
 
   return (
     <div>
       {orders.map((order) => (
-        <div>
+        <div  key={order.id}>
           <div>
             <div className="mt-20 bg-stone-200 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8    rounded-md overflow-hidden">
               <h1 className="text-5xl font-serif font-semibold tracking-tighter text-slate-800 pl-10 py-5">
@@ -33,11 +33,11 @@ export default function UserOrders() {
                 <div className="flow-root">
                   <ul role="list" className="-my-6 divide-y divide-gray-200">
                     {order.items.map((item) => (
-                      <li key={item.id} className="flex py-6">
+                      <li key={item.product.id} className="flex py-6">
                         <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            alt={item.title}
-                            src={item.thumbnail}
+                            alt={item.product.title}
+                            src={item.product.thumbnail}
                             className="size-full object-cover"
                           />
                         </div>
@@ -45,20 +45,20 @@ export default function UserOrders() {
                         <div className="ml-4 flex flex-1 flex-col">
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
-                              <h3>{item.title}</h3>
+                              <h3>{item.product.title}</h3>
                               <div>
                                 {" "}
                                 <p className="ml-4 font-bold">
                                   ${" "}
-                                  {discountedPrice(item)* item.quantity}
+                                  {discountedPrice(item.product)* item.quantity}
                                 </p>
                                 <p className="ml-4 text-gray-400 line-through">
-                                  $ {item.price.toFixed(2) * item.quantity}
+                                  $ {item.product.price.toFixed(2) * item.quantity}
                                 </p>
                               </div>
                             </div>
                             <p className="mt-1 text-sm text-gray-600">
-                              {item.brand}
+                              {item.product.brand}
                             </p>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">
