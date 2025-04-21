@@ -2,7 +2,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
@@ -10,7 +10,7 @@ import Protected from "./features/auth/Protected";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchItemsByUserIdAsync } from "./features/cart/CartSlice";
-import { selectLoggedInUser } from "./features/auth/authSlice";
+import { checkAuthAsync, selectLoggedInUser, selectUserChecked } from "./features/auth/authSlice";
 import PageNotFound from "./pages/404";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import UserOrdersPage from "./pages/UserOdersPage";
@@ -29,17 +29,25 @@ import AdminOrdersPage from "./pages/AdminOrdersPage";
 function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedInUser);
+  const userChecked =useSelector(selectUserChecked);
+
+useEffect(()=>{
+
+  dispatch(checkAuthAsync())
+},[]);
 
   useEffect(() => {
     if (user) {
-      dispatch(fetchItemsByUserIdAsync(user.id));
-      dispatch(fetchLoggedInUserAsync(user.id))
+      dispatch(fetchItemsByUserIdAsync());
+      // we can get req.user by token on backend so no need to give in front—end
+      dispatch(fetchLoggedInUserAsync())
     }
   }, [dispatch, user]);
 
   return (
     <>
-      <Routes>
+        {userChecked && 
+       <Routes>
         <Route
           path="/"
           element={
@@ -170,6 +178,7 @@ function App() {
 
         {/* Onl for test  */}
       </Routes>
+        } 
     </>
   );
 }

@@ -1,24 +1,23 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchLoggedInUserOrderAsync, selectUserInfo, selectUserOrders } from "../userSlice";
+import { fetchLoggedInUserOrderAsync,  selectUserOrders } from "../userSlice";
 import { discountedPrice } from "../../../app/constants";
 
 
 export default function UserOrders() {
   const dispatch = useDispatch();
 
-  const userInfo = useSelector(selectUserInfo);
   const orders = useSelector(selectUserOrders);
 
   console.log("Orders Data:", orders);
 
   useEffect(() => {
-    dispatch(fetchLoggedInUserOrderAsync(userInfo.id));
+    dispatch(fetchLoggedInUserOrderAsync());
   }, []);
 
   return (
     <div>
-      {orders.map((order) => (
+      {orders && orders.map((order) => (
         <div  key={order.id}>
           <div>
             <div className="mt-20 bg-stone-200 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8    rounded-md overflow-hidden">

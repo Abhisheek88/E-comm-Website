@@ -6,7 +6,6 @@ import { fetchProductByIdAsync, selectProductById } from "../ProductSlice";
 
 import { useParams } from "react-router-dom";
 import { addToCartAsync, selectItems } from "../../cart/CartSlice";
-import { selectLoggedInUser } from "../../auth/authSlice";
 import { discountedPrice } from "../../../app/constants";
 
 const colors = [
@@ -14,25 +13,24 @@ const colors = [
   { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
   { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
 ];
-const sizes = [
-  { name: "XXS", inStock: false },
-  { name: "XS", inStock: true },
-  { name: "S", inStock: true },
-  { name: "M", inStock: true },
-  { name: "L", inStock: true },
-  { name: "XL", inStock: true },
-  { name: "2XL", inStock: true },
-  { name: "3XL", inStock: true },
-];
+// const sizes = [
+//   { name: "XXS", inStock: false },
+//   { name: "XS", inStock: true },
+//   { name: "S", inStock: true },
+//   { name: "M", inStock: true },
+//   { name: "L", inStock: true },
+//   { name: "XL", inStock: true },
+//   { name: "2XL", inStock: true },
+//   { name: "3XL", inStock: true },
+// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function ProductDetails() {
-  const [selectedColor, setSelectedColor] = useState(colors[0]);
-  const [selectedSize, setSelectedSize] = useState(sizes[2]);
-  const user = useSelector(selectLoggedInUser);
+  // const [selectedColor, setSelectedColor] = useState(colors[0]);
+  // const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const product = useSelector(selectProductById);
   const dispatch = useDispatch();
   const params = useParams();
@@ -44,7 +42,7 @@ export default function ProductDetails() {
 
     if(items.findIndex(item=>item.product.id ===product.id)<0)
 {
-      const newItem = {  product:product.id, quantity: 1, user: user.id };
+      const newItem = {  product:product.id, quantity: 1 };
       // delete newItem["id"];
       dispatch(addToCartAsync(newItem));
     }
@@ -172,7 +170,7 @@ export default function ProductDetails() {
 
               <form className="mt-10">
                 {/* Colors */}
-                <div>
+                {/* <div>
                   <h3 className="text-sm font-medium text-gray-900">Color</h3>
 
                   <fieldset aria-label="Choose a color" className="mt-4">
@@ -202,10 +200,10 @@ export default function ProductDetails() {
                       ))}
                     </RadioGroup>
                   </fieldset>
-                </div>
+                </div> */}
 
                 {/* Sizes */}
-                <div className="mt-10">
+                {/* <div className="mt-10">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-medium text-gray-900">Size</h3>
                     <a
@@ -265,7 +263,7 @@ export default function ProductDetails() {
                       ))}
                     </RadioGroup>
                   </fieldset>
-                </div>
+                </div> */}
 
                 <button
                   onClick={handleCart}

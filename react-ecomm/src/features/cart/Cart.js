@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteItemFromCartAsync,
+  selectCartLoaded,
   selectItems,
   updateCartAsync,
 } from "./CartSlice";
@@ -22,6 +23,7 @@ export default function Cart() {
   const [open, setOpen] = useState(true);
 
   const items = useSelector(selectItems);
+  const cartLoaded =useSelector(selectCartLoaded);
   
   const totalAmount = items.reduce(
     (amount, item) =>
@@ -44,7 +46,7 @@ export default function Cart() {
 
   return (
     <>
-     {!items.length  && <Navigate to='/' replace={true} ></Navigate>}
+     {!items.length  && cartLoaded && <Navigate to='/' replace={true} ></Navigate>}
      
       <div>
         <div className="mt-20 bg-stone-200 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8    rounded-md overflow-hidden">
@@ -141,12 +143,12 @@ export default function Cart() {
             </p>
             <Link to="/checkout">
               <div className="mt-6">
-                <a
-                  href="#"
+                <p
+                  // href="#"
                   className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                 >
                   Checkout
-                </a>
+                </p>
               </div>
             </Link>
             <div className="mt-6 flex justify-center text-center text-sm text-gray-600">

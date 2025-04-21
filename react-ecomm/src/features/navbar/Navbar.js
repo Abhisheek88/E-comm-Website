@@ -16,7 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectItems } from "../cart/CartSlice";
-import { selectLoggedInUser } from "../auth/authSlice";
+import { selectUserInfo } from "../user/userSlice";
 
 
 
@@ -37,10 +37,11 @@ function classNames(...classes) {
 
 function Navbar({ children }) {
   const items = useSelector(selectItems);
-  const user = useSelector(selectLoggedInUser)
+  const userInfo = useSelector(selectUserInfo);
 
   return (
-    <div>
+    <>
+  { userInfo && <div>
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-gray-800">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -58,7 +59,7 @@ function Navbar({ children }) {
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
                     {navigation.map((item) =>
-                      item[user.role] ? (
+                      item[userInfo.role] ? (
                         <Link
                           key={item.name}
                           to={item.link}
@@ -103,7 +104,7 @@ function Navbar({ children }) {
                         <span className="sr-only">Open user menu</span>
                         <img
                           alt=""
-                          src={user.imageUrl}
+                          src={userInfo.imageUrl}
                           className="size-8 rounded-full"
                         />
                       </MenuButton>
@@ -173,16 +174,16 @@ function Navbar({ children }) {
                 <div className="shrink-0">
                   <img
                     alt=""
-                    src={user.imageUrl}
+                    src={userInfo.imageUrl}
                     className="size-10 rounded-full"
                   />
                 </div>
                 <div className="ml-3">
                   <div className="text-base/5 font-medium text-white">
-                    {user.name}
+                    {userInfo.name}
                   </div>
                   <div className="text-sm font-medium text-gray-400">
-                    {user.email}
+                    {userInfo.email}
                   </div>
                 </div>
                 <Link to="/cart">
@@ -231,7 +232,7 @@ function Navbar({ children }) {
           </div>
         </main>
       </div>
-    </div>
+    </div>} </>
   );
 }
 

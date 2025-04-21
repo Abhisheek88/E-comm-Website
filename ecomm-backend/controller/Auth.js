@@ -1,6 +1,8 @@
 const { User } = require("../model/User");
 const crypto = require("crypto");
 const { sanitizeUser } = require("../services/common");
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = "SECRET_KEY";
 
 exports.createUser = async (req, res) => {
   try {
@@ -12,18 +14,23 @@ exports.createUser = async (req, res) => {
       32,
       "sha256",
       async function (err, hashedPassword) {
-        const user = new User({ ...req.body, password: hashedPassword,salt });
+        const user = new User({ ...req.body, password: hashedPassword, salt });
         const doc = await user.save();
 
-        req.login(sanitizeUser(doc), (err) =>{
-          if(err){
+        req.login(sanitizeUser(doc), (err) => {
+          if (err) {
             res.status(400).json(err);
-          }
-          else{
-            res.status(201).json(sanitizeUser(doc));
+          } else {
+            const token = jwt.sign(sanitizeUser(doc), SECRET_KEY);
+            res
+              .cookie("jwt", token, {
+                expires: new Date(Date.now() + 3600000),
+                httpOnly: true,
+              })
+              .status(201)
+              .json({ id:doc.id, role:doc.role});
           }
         });
-       
       }
     );
   } catch (err) {
@@ -50,11 +57,35 @@ exports.createUser = async (req, res) => {
 //   }
 // };
 exports.loginUser = async (req, res) => {
-  // ****Passport JS**********
-  res.json(req.user);
+   
+   const user = req.user;
+  res
+  .cookie("jwt", user.token, {
+    expires: new Date(Date.now() + 3600000),
+    httpOnly: true,
+  })
+  .status(201)
+  .json({id:user.id, role:user.role});
+  
 };
 
-exports.checkUser = async (req, res) => {
+// exports.loginUser = async (req, res) => {
+  
+//   const user = req.user;
+//   res
+//     .cookie('jwt', user.token, {
+//       expires: new Date(Date.now() + 3600000),
+//       httpOnly: true,
+//     })
+//     .status(201)
+//     .json({ id: user.id, role: user.role });
+// };
+
+exports.checkAuth = async (req, res) => {
   // ****Passport JS**********
-  res.json(req.user);
+ if(req.user){
+  res.json(req.user );
+ }else{
+  res.sendStatus(401)
+ }
 };
