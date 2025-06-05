@@ -23,9 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
-.env.*
+# .env.*
 
-**/.env.*
+**/.env*
+**/node_modules/
 # ecomm-backend/node_modules/
 # react-ecomm/node_modules/
-**/node_modules/
