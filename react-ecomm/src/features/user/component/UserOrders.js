@@ -27,6 +27,7 @@ export default function UserOrders() {
               <h3 className="text-lg font-serif font-semibold tracking-tighter text-slate-800 pl-10 py-5">
                 Order Status :- {order.status}
               </h3>
+            
 
               <div className="px-4 py-6 sm:px-6">
                 <div className="flow-root">
@@ -88,6 +89,13 @@ export default function UserOrders() {
                   <p>Total items in Cart</p>
                   <p className="text-gray-500">{order.totalItems} items</p>
                 </div>
+                <div className="flex justify-between my-2 text-base font-medium text-gray-900">
+                  <p>Payment Method :-</p>
+                  <p className={order.paymentMethod==='card'?"text-lg font-serif font-semibold tracking-tighter text-green-700 ":"text-lg font-serif font-semibold tracking-tighter text-yellow-700 "}>
+                 {order.paymentMethod}
+              </p>
+                </div>
+                  
                 <p className="mt-0.5 text-md pb-2 text-gray-600">
                   Shipping Address
                 </p>

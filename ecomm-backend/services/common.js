@@ -5,7 +5,7 @@ exports.isAuth = (req, res, done) =>{
   };
 
   exports.sanitizeUser =(user)=>{
-    return {id:user.id, role:user.role}
+    return {id:user.id, role:user.role}         
 
   };
 

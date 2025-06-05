@@ -2,7 +2,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {  Route, Routes } from "react-router-dom";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
@@ -15,16 +15,15 @@ import PageNotFound from "./pages/404";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import UserOrdersPage from "./pages/UserOdersPage";
 import UserProfilePage from "./pages/UserProfilePage";
-import { fetchLoggedInUser } from "./features/user/userAPI";
 import { fetchLoggedInUserAsync } from "./features/user/userSlice";
 import Logout from "./features/auth/components/Logout";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProtectedAdmin from "./features/auth/ProtectedAdmin";
 import AdminHome from "./pages/AdminHome";
 import AdminProductDetailPage from "./pages/AdminProductDetailPage";
-import ProductForm from "./features/admin/components/ProductForm";
 import ProductFormPage from "./pages/ProductFormPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
+import StripeCheckout from "./pages/StripeCheckout";
 
 function App() {
   const dispatch = useDispatch();
@@ -168,7 +167,18 @@ useEffect(()=>{
          <ForgotPasswordPage></ForgotPasswordPage>
         
           }
+          ></Route>
+
+        <Route
+          path="/stripe-checkout/"
+          element={
+            <Protected>
+               {/* <ForgotPasswordPage></ForgotPasswordPage> */}
+          <StripeCheckout></StripeCheckout> 
+          </Protected>
+          }
         ></Route>
+
         <Route
           path="*"
           element={

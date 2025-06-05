@@ -31,6 +31,8 @@ export function loginUser(loginInfo) {
   });
 }
 
+
+
 export function checkAuth() {
   return new Promise(async (resolve, reject) => {
     try {

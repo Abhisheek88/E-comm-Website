@@ -19,6 +19,10 @@ const { User } = require("./model/User");
 const LocalStrategy = require("passport-local").Strategy;
 const crypto = require("crypto");
 const { isAuth, sanitizeUser, cookieExtractor } = require("./services/common");
+const path = require('path');
+require('dotenv').config();
+
+
 
 const SECRET_KEY = "SECRET_KEY";
 
@@ -28,20 +32,27 @@ const opts = {};
 opts.jwtFromRequest =cookieExtractor;
 opts.secretOrKey = "SECRET_KEY";  
 
-//Middleware
+
+
 server.use(
-  cors({
-    exposedHeaders: ["X-Total-Count"],
-  })
+  cors()
 );
 
-server.use(express.static('build'));
+
+
+
+// Serve static files from the React build
+server.use(express.static(path.join(__dirname, 'build')));
+
+
+
 
 server.use(
   session({
     secret: "keyboard cat",
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
+    // cookie:{secure:false, maxAge:60000}  //destroy in 60 sec
   })
 );
 
@@ -84,8 +95,8 @@ passport.use(
           }
 
           const token = jwt.sign(sanitizeUser(user), SECRET_KEY);
-          done(null,{ id:user.id, role:user.role});
-          // ,token:token
+          done(null,{ id:user.id, role:user.role,token:token});
+          // 
         }
       );
     } catch (err) {
@@ -132,11 +143,56 @@ passport.deserializeUser(function (user, cb) {
   });
 });
 
-const MONGO_URI =
-  "mongodb+srv://Abhisheek88:Abhi123@abhi.7hlfr.mongodb.net/ecomm";
+
+
+
+
+//Payments
+
+
+// This is your test secret API key.
+const stripe = require("stripe")(process.env.SECRET_KEY);
+
+
+const calculateOrderAmount = (items) => {
+  // Calculate the order total on the server to prevent
+  // people from directly manipulating the amount on the client
+ 
+  return 1200;
+};
+
+server.post("/create-payment-intent", async (req, res) => {
+  const { totalAmount,orderId } = req.body;
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: calculateOrderAmount(totalAmount),
+   
+    currency: "usd",
+    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
+
+
+
+// Fallback for ALL frontend routes (important for React Router)
+server.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+
+
+
+
 
 mongoose
-  .connect(MONGO_URI)
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB "))
   .catch((err) => console.error("MongoDB Connection Error:", err));
   
